@@ -355,7 +355,6 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	if(show_post_body == 1)
 	{
 	  char s[size_data];
-	
 	  strncpy(s, data, size_data);
 	
 	  int i;
@@ -373,8 +372,9 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	  while(pch != NULL)
 	  {
 	    char * check = strstr(pch, "Content-Length");
+	    char * checkmet = strstr(default_methods,"post");
 	    
-	    if(check != NULL)
+	    if(check != NULL && checkmet != NULL)
 	    {
 	      flag = 1;
 	    }
@@ -382,18 +382,17 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	    if(flag == 1 && c == 0)
 	    {
 	      char * searchAmp = strstr(pch, "=");
+	      char * searchAmp3 = strstr(pch,"&");
+	    
 	      
-	      if(searchAmp != NULL)
+	      if(searchAmp != NULL  && searchAmp3 != NULL )
 	      {
-		char * searchQuestion = strstr(pch, "?");
 		
-		if(searchQuestion == NULL)
-		{
 		  printf("\n\n");
-		  printf("POST  BODY: %s\n", pch);
+		  printf("Body Content: %s\n", pch);
 		  printf("\n\n");
 		  flag = 0;
-		}
+		
 	      }
 	    }
 	  

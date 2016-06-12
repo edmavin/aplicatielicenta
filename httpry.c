@@ -361,42 +361,43 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	  for(i = 0; i < size_data; i++)
 	  {
 	    if (s[i] == '\n' || s[i] == '\r' || s[i] == '\0')
-	      s[i] = '|';
+	      s[i] = '|';    // se cauta sfarsitul headerelor care este reprezentat de /n /r sau /0 
 	  }
 	  
 	  char * pch;
 	  
-	  pch = strtok(s, "|");
+	  pch = strtok(s, "|");   //se imparte stringul in tokens/fragmente
 	  int c = 0;
 	  
-	  while(pch != NULL)
+	  while(pch != NULL)   //cat timp exista fragmente se cauta headerele Content-Length sau Transfer-Encoding
 	  {
 	    char * check = strstr(pch, "Content-Length");
-	    char * checkmet = strstr(default_methods,"post");
+	    char * check2 = strstr(pch, "Transfer-Encoding" )
+	    char * checkmet = strstr(default_methods,"post"); // metoda default aleasa trebuie sa fie post 
 	    
-	    if(check != NULL && checkmet != NULL)
+	    if((check != NULL && checkmet != NULL) || (check != NULL && checkmet != NULL))  //trebuie gasit ori Content-Lengt ori Transfer-Encoding
 	    {
-	      flag = 1;
+	      flag = 1;  // flag-ul devine activ pentru a putea folosi conditiile de mai jos 
 	    }
 	    
 	    if(flag == 1 && c == 0)
 	    {
-	      char * searchAmp = strstr(pch, "=");
-	      char * searchAmp3 = strstr(pch,"&");
+	      char * searchAmp = strstr(pch, "="); 
+	      char * searchAmp3 = strstr(pch,"&");  // orice mesaj de tip HTTP form pt POST are cele doua caractere ceea ce nu este cazul pt altfel de requesturi GET
 	    
 	      
-	      if(searchAmp != NULL  && searchAmp3 != NULL )
+	      if(searchAmp != NULL  && searchAmp3 != NULL )    // cat timp exista amandoua caracterele 
 	      {
 		
 		  printf("\n\n");
-		  printf("Body Content: %s\n", pch);
+		  printf("Body Content: %s\n", pch); //se printeaza continutul body-ului care este http form-ul completat de utilizator
 		  printf("\n\n");
-		  flag = 0;
+		  flag = 0;  //flag se reinitilizeaza la 0 si se reincepe toata iteratia 
 		
 	      }
 	    }
 	  
-	    pch  = strtok(NULL,  "|");
+	    pch  = strtok(NULL,  "|"); //pch se reinitializeaza
 	  }
 	}
 	

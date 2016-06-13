@@ -399,7 +399,7 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	  
 	    pch  = strtok(NULL,  "|"); //pch se reinitializeaza
 	  }
-	}   */
+	}   
 	
 	if(show_post_body == 1 && is_request == 1)
 	{
@@ -417,7 +417,7 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	      
 	  }
 	
-}
+}*/
 	
         /* Check if we appear to have a valid request or response */
         if (is_request_method(data)) {
@@ -450,7 +450,31 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 
                 insert_value(header_line, req_value);
         }
+/* codul modificat!!! */        
+char re[size_data];
+strncpy(re,data,size_data);
+char * check;
+check = strstr(re,"POST");
 
+if(show_post_body == 1 && check!= NULL)
+	{
+	  char s[size_data];
+	  strncpy(s, data, size_data);
+	  char * pch;
+	  pch = strstr(s, "\r\n\r\n");
+	  
+	
+	 if(pch != NULL)
+	  {
+           	  printf("\n\n");
+		  printf("Body Content: %s\n", pch);
+		  printf("\n\n");
+		//insert_value("body",pch);
+	      
+	  }
+	
+}
+/* codul modificat */
         /* Grab source/destination IP addresses */
         if (family == AF_INET) {
                 inet_ntop(family, &ip->ip_src, saddr, sizeof(saddr));

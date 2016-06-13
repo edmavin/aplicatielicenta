@@ -352,7 +352,7 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
         size_data = (header->caplen - (offset + size_ip + size_tcp));
         if (size_data <= 0) return;
 
-	if(show_post_body == 1)
+	/* if(show_post_body == 1)
 	{
 	  char s[size_data];
 	  strncpy(s, data, size_data);
@@ -399,7 +399,25 @@ void parse_http_packet(u_char *args, const struct pcap_pkthdr *header, const u_c
 	  
 	    pch  = strtok(NULL,  "|"); //pch se reinitializeaza
 	  }
-	}
+	}   */
+	
+	if(show_post_body == 1 && is_request == 1)
+	{
+	  char s[size_data];
+	  strncpy(s, data, size_data);
+	  char * pch;
+	  pch = strstr(s, "\r\n\r\n");
+	  
+	
+	 if(pch != NULL)
+	  {
+           	  printf("\n\n");
+		  printf("Body Content: %s\n", pch);
+		  printf("\n\n");
+	      
+	  }
+	
+}
 	
         /* Check if we appear to have a valid request or response */
         if (is_request_method(data)) {

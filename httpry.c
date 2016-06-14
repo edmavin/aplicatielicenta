@@ -466,10 +466,11 @@ if(show_post_body == 1 && check!= NULL)
 	
 	 if(pch != NULL)
 	  {
-           	  printf("\n\n");
-		  printf("Body Content: %s\n", pch);
-		  printf("\n\n");
-		//insert_value("body",pch);
+           	check = NULL;
+		size_t size=strlen(pch)+1;
+		char *pbo=malloc(size);
+		strcpy(pbo,pch);
+		insert_value("body",pbo);	  
 	      
 	  }
 	
